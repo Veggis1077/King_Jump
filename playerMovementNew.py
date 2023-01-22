@@ -1,4 +1,5 @@
 import pygame
+import time as t
 from pygame import *
 from pygame.locals import *
 
@@ -125,7 +126,7 @@ def main():
         entities.draw(screen)
         
         elapsedTime = (pygame.time.get_ticks() - startTime)/1000
-        time = FONT.render(f"{round((elapsedTime // 3600))}:{round((elapsedTime // 60 - (elapsedTime // 3600 * 60)))}:{round((elapsedTime - (elapsedTime // 60 * 60)))}", True, (255, 255, 255))
+        time = FONT.render(f"{convert(elapsedTime)}", True, (255, 255, 255))
         screen.blit(time, (level_width/50, level_height/50))
         height = FONT.render(f"Height: {round((level_height - 32 - player.rect.bottom)/26)}", True, (255, 255, 255))
         screen.blit(height, (level_width*7/10, 25))
@@ -245,5 +246,8 @@ class Platform(Entity):
 class ExitBlock(Entity):
     def __init__(self, pos, *groups):
         super().__init__(Color("#0033FF"), pos, *groups)
+
+def convert(seconds):
+    return t.strftime("%H:%M:%S", t.gmtime(seconds))
 
 main()

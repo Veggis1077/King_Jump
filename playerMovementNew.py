@@ -86,8 +86,8 @@ def main():
         "                         ",
         "                         ",
         "                         ",
-        "               P         ",
-        "               P         ",
+        "            PPPP         ",
+        "              PP         ",
         "               P         ",
         "PPPPPPPPPPPPPPPPPPPPPPPPP",]
 
@@ -121,7 +121,7 @@ def main():
 
         entities.update()
 
-        screen.blit(pygame.image.load("newBackground.jpg"), (0, -875 - player.rect.bottom/10))
+        screen.blit(pygame.image.load("newBackground.jpg").convert(), (0, -875 - player.rect.bottom/10))
 
         entities.draw(screen)
         
@@ -149,7 +149,7 @@ class Player(Entity):
     global level_width, level_height
     def __init__(self, platforms, pos, hitbox, jumps = 0, fails = 0, *groups):
         super().__init__(Color("#0000FF"), pos, hitbox)
-        self.image = pygame.image.load("player.png")
+        self.image = pygame.image.load("player.png").convert()
         self.vel = pygame.Vector2((0, 0))
         self.onGround = True
         self.platforms = platforms
@@ -161,7 +161,7 @@ class Player(Entity):
     def update(self):
         for platform in self.platforms:
             if platform.rect[1] < 500:
-                platform.image = pygame.image.load("grass.png")
+                platform.image = pygame.image.load("grass.png").convert()
         pressed = pygame.key.get_pressed()
         
         up = pressed[K_SPACE]

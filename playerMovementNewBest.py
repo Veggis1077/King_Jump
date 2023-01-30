@@ -58,100 +58,131 @@ def main():
     timer = pygame.time.Clock()
 
     level = [
-        "                       PPPPPPP",
+        "                              ",
+        "          E                   ",
+        "       pppppppppppppppp       ",
+        "       p              p       ",
+        "       p              p       ",
+        "       ppppppppppppppppppp    ",
         "                              ",
         "                              ",
-        "            PPPPP             ",
-        "                              ",
-        "                              ",
-        " PPPPP                        ",
-        "                       PPPPPPP",
-        "                              ",
-        "                              ",
-        "            PPPPP             ",
-        "                              ",
-        "                              ",
-        " PPPPP                        ",
-        "                       PPPPPPP",
-        "                              ",
-        "                              ",
-        "            PPPPP             ",
-        "                              ",
-        "                              ",
-        " PPPPP                        ",
-        "                       PPPPPPP",
-        "                              ",
-        "                              ",
-        "            PPPPP             ",
-        "                              ",
-        "                              ",
-        " PPPPP                        ",
-        "                       PPPPPPP",
-        "                              ",
-        "                              ",
-        "            PPPPP             ",
-        "                              ",
-        "                              ",
-        " PPPPP                        ",
-        "                       PPPPPPP",
-        "                              ",
-        "                              ",
-        "            PPPPP             ",
-        "                              ",
-        "                              ",
-        " PPPPP                        ",
-        "                       PPPPPPP",
-        "                              ",
-        "                              ",
-        "            PPPPP             ",
-        "                              ",
-        "                              ",
-        " PPPPP                        ",
+        "            pp                ",
+        "               pp             ",
+        "                  pp          ",
+        "    pppp                      ",
         "                              ",
         "                              ",
         "                              ",
-        "                          PPPP",
+        "                           ppp",
         "                              ",
         "                              ",
         "                              ",
-        "          PPPPPPPP            ",
+        "                              ",
+        "   ppppp           pppp       ",
+        "       p           p          ",
+        "       p           p          ",
+        "       p                      ",
+        "       p                      ",
+        "       p                      ",
+        "       pppp            ppppp  ",
+        "       p  p            p      ",
+        "       p  p            p      ",
+        "       p  p            p      ",
+        "       p  p            p      ",
+        "       pppp         pppp      ",
+        "                    p         ",
+        "                    p         ",
+        "                    p         ",
+        "       pppp       ppp         ",
+        "                              ",
+        "ppp                           ",
         "                              ",
         "                              ",
-        "                       PPPPPPP",
+        "       pppp                   ",
         "                              ",
         "                              ",
         "                              ",
         "                              ",
         "                              ",
-        "       PPPPPPPPPPP            ",
+        "                              ",
+        "                              ",
+        "ppp                           ",
+        "                              ",
+        "       pppp                   ",
         "                              ",
         "                              ",
         "                              ",
-        "                    P         ",
-        "                    P         ",
-        "                    P         ",
+        "                ppp           ",
+        "        ppppppppp p           ",
+        "        p         p           ",
+        "        ppppppppppp        pppp",
+        "                              ",
+        "                              ",
+        "       ppppp  pppppppp        ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "PPPPP                         ",
+        "       PPPPP                  ",
+        "                              ",
+        "                              ",
+        "              PPPP        PPPP",
+        "                              ",
+        "                              ",
+        "                    PPPP      ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "             PPPPPP           ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "PPPPPPPPPP           PPPPPPPPP",
+        "         P           P        ",
+        "         P           P        ",
+        "         P           P        ",
+        "         P           P        ",
+        "         P           P        ",
         "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
     
+    x = y = 0
+
+    for row in level:
+        y += TILE_SIZE
+    
     platforms = pygame.sprite.Group()
-    player = Player(platforms, (20, 2200), (24, 34)) #andre argument er startposisjon, (0, 0) er øverst i venstre krok, tredje argument er hitbox, x og y størrelse
+    player = Player(platforms, (SCREEN_SIZE.width/2, y-300), (24, 34)) #andre argument er startposisjon, (0, 0) er øverst i venstre krok, tredje argument er hitbox, x og y størrelse
     level_width  = len(level[0])*TILE_SIZE
     level_height = len(level)*TILE_SIZE
     entities = CameraAwareLayeredUpdates(player, pygame.Rect(0, 0, level_width, level_height))
     
-    menu(screen, timer)
+    pygame.mixer.init()
+    mixer.music.load("menuStart.mp3")
+    mixer.music.set_volume(0.2)
+    mixer.music.play()
+    startMenu(screen, timer)
+    mixer.music.stop()
+    mixer.music.load("gameMusic.mp3")
+    mixer.music.play()
 
-    # build the level
     x = y = 0
+    
+    # build the level
     for row in level:
         for col in row:
-            if col == "P":
+            if col.lower() == "p":
                 Platform((x, y), (TILE_SIZE, TILE_SIZE), platforms, entities)
-            if col == "E":
+            if col.lower() == "e":
                 ExitBlock((x, y), (TILE_SIZE, TILE_SIZE), platforms, entities)
             x += TILE_SIZE
         y += TILE_SIZE
         x = 0
-    
+
     startTime = pygame.time.get_ticks()
     
     background = pygame.image.load("newBackground.jpg").convert()
@@ -164,17 +195,17 @@ def main():
 
         entities.update()
         
-        screen.blit(background, (0, -650 - player.rect.bottom/10))
+        screen.blit(background, (0, -625 - player.rect.bottom/10))
 
         entities.draw(screen)
         
         elapsedTime = (pygame.time.get_ticks() - startTime)/1000
         time = FONT.render(f"{convert(elapsedTime)}", True, (255, 255, 255))
-        screen.blit(time, (level_width/50, level_height/50))
+        screen.blit(time, (level_width/50, level_height/200))
         height = FONT.render(f"Height: {round((level_height - 32 - player.rect.bottom)/26)}", True, (255, 255, 255))
-        screen.blit(height, (level_width*7/10, 25)) 
+        screen.blit(height, (level_width*8/10, 25)) 
         jumps = FONT.render(f"Jumps: {player.jumps}", True, (255, 255, 255))
-        screen.blit(jumps, (level_width*7/10, 60))
+        screen.blit(jumps, (level_width*8/10, 60))
 
         pygame.display.update()
         timer.tick(60)
@@ -190,7 +221,7 @@ class Player(Entity):
     oldHeight = 0
     newHeight = 0
     global level_width, level_height
-    def __init__(self, platforms, pos, hitbox, jumps = 0, fails = 0, *groups):
+    def __init__(self, platforms, pos, hitbox, *groups):
         super().__init__(Color("#0000FF"), pos, hitbox)
         self.image = pygame.image.load("newPlayer.png").convert()
         self.vel = pygame.Vector2((0, 0))
@@ -198,13 +229,15 @@ class Player(Entity):
         self.platforms = platforms
         self.speed = 8
         self.jump_strength = 12
-        self.jumps = jumps
-        self.fails = fails
+        self.jumps = 0
+        self.fails = 0
         
     def update(self):
         for platform in self.platforms:
-            if platform.rect[1] < 500:
-                platform.image = pygame.image.load("grass.png")
+            if isinstance(platform, ExitBlock):
+                image = pygame.image.load("door.png").convert()
+                image = pygame.transform.scale(image, (66, 50))
+                platform.image = image
         pressed = pygame.key.get_pressed()
         
         up = pressed[K_SPACE]
@@ -264,6 +297,7 @@ class Player(Entity):
         for platform in platforms:
             if pygame.sprite.collide_rect(self, platform):
                 if isinstance(platform, ExitBlock):
+                    endMenu()
                     pygame.event.post(pygame.event.Event(QUIT))
                 if xvel > 0:
                     self.rect.right = platform.rect.left
@@ -290,8 +324,10 @@ class ExitBlock(Entity):
     def __init__(self, pos, *groups):
         super().__init__(Color("#0033FF"), pos, *groups)
 
-def menu(screen, timer):
-    menuScreen = pygame.image.load("menu.png").convert()
+def startMenu(screen, timer):
+    currentMenu = "start"
+    menuStart = pygame.image.load("menuStart.png").convert()
+    menuQuit = pygame.image.load("menuQuit.png").convert()
     viewingMenu = True
     while viewingMenu:
         for event in pygame.event.get():
@@ -299,12 +335,41 @@ def menu(screen, timer):
                 exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    viewingMenu = False
+                    if currentMenu == "start":
+                        viewingMenu = False
+                    elif currentMenu == "quit":
+                        exit()
+                elif event.key == pygame.K_DOWN:
+                    currentMenu = "quit"
+                elif event.key == pygame.K_UP:
+                    currentMenu = "start"
             else:
-                screen.blit(menuScreen, (0, 0))
-                pressed = pygame.key.get_pressed()
+                if currentMenu == "start":
+                    screen.blit(menuStart, (0, 0))
+                elif currentMenu == "quit":
+                    screen.blit(menuQuit, (0, 0))
                 pygame.display.update()
-                timer.tick(10)
+                timer.tick(60)
+
+def endMenu():
+    FONT = pygame.font.Font("freesansbold.ttf", 32)
+    screen = pygame.display.set_mode(SCREEN_SIZE.size)
+    timer = pygame.time.Clock()
+    startTime = pygame.time.get_ticks()
+    viewingMenu = True
+    while viewingMenu:
+        if (pygame.time.get_ticks() - startTime)/1000 > 5:
+            viewingMenu = False
+        for event in pygame.event.get():
+            if event.type == QUIT: 
+                exit()
+            screen.fill((0, 0, 0))
+            endMessage1 = FONT.render("Congratulations! You escaped the simulation.", True, (255, 255, 255))
+            screen.blit(endMessage1, (120, SCREEN_SIZE.height/2))
+            endMessage2 = FONT.render("The next one is more challenging. Good luck.", True, (255, 255, 255))
+            screen.blit(endMessage2, (120, SCREEN_SIZE.height/2 + 30))
+            pygame.display.update()
+            timer.tick(60)
 
 def convert(seconds):
     return t.strftime("%H:%M:%S", t.gmtime(seconds))

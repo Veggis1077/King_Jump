@@ -147,7 +147,7 @@ def main():
         "6666666664           5666666666",
         "6666666664           5666666666",
         "6666666664           5666666666",
-        "6666666664         E 5666666666",
+        "6666666664           5666666666",
         "6666666666111111111116666666666",]
     
     x = y = 0
@@ -175,10 +175,10 @@ def main():
     # build the level
     for row in level:
         for col in row:
-            if col != " ":
-                Platform(col, (x, y), (TILE_SIZE, TILE_SIZE), platforms, entities)
             if col.lower() == "e":
                 ExitBlock((x, y), (TILE_SIZE, TILE_SIZE), platforms, entities)
+            elif col != " ":
+                Platform(col, (x, y), (TILE_SIZE, TILE_SIZE), platforms, entities)
             x += TILE_SIZE
         y += TILE_SIZE
         x = 0
@@ -322,11 +322,10 @@ class Player(Entity):
 
     def collide(self, xvel, yvel, platforms):
         for platform in platforms:
-            if isinstance(platform, ExitBlock):
-                if (platform.rect.bottomright == self.rect.bottomleft) or (platform.rect.bottomleft == self.rect.bottomright) or (platform.rect.top == self.rect.bottom):
+            if pygame.sprite.collide_rect(self, platform):
+                if isinstance(platform, ExitBlock):
                     endMenu(self.jumps, self.fails, round((level_height - 32 - self.rect.bottom)/26))
                     pygame.event.post(pygame.event.Event(QUIT))
-            if pygame.sprite.collide_rect(self, platform):
                 if xvel > 0:
                     self.rect.right = platform.rect.left
                     self.vel.x = 0

@@ -60,65 +60,45 @@ def main():
     level = [
         "                              ",
         "          E                   ",
-        "       pppppppppppppppp       ",
-        "       p              p       ",
-        "       p              p       ",
-        "       ppppppppppppppppppp    ",
+        "       3111111111111112       ",
+        "       5666666666666664       ",
+        "       5666666666666664       ",
+        "       9777777777777778112    ",
         "                              ",
         "                              ",
-        "            pp                ",
-        "               pp             ",
-        "                  pp          ",
-        "    pppp                      ",
-        "                              ",
-        "                              ",
-        "                              ",
-        "                           ppp",
+        "            32                ",
+        "               32             ",
+        "                  32          ",
+        "    3112                      ",
         "                              ",
         "                              ",
         "                              ",
-        "                              ",
-        "   ppppp           pppp       ",
-        "       p           p          ",
-        "       p           p          ",
-        "       p                      ",
-        "       p                      ",
-        "       p                      ",
-        "       pppp            ppppp  ",
-        "       p  p            p      ",
-        "       p  p            p      ",
-        "       p  p            p      ",
-        "       p  p            p      ",
-        "       pppp         pppp      ",
-        "                    p         ",
-        "                    p         ",
-        "                    p         ",
-        "       pppp       ppp         ",
-        "                              ",
-        "ppp                           ",
-        "                              ",
-        "                              ",
-        "       pppp                   ",
+        "                           312",
         "                              ",
         "                              ",
         "                              ",
         "                              ",
+        "   31112           3112       ",
+        "       4           5          ",
+        "       4           5          ",
+        "       4                      ",
+        "       4                      ",
+        "       4                      ",
+        "       3112            31112  ",
+        "       5664            5      ",
+        "       5664            5      ",
+        "       5664            5      ",
+        "       5664            5      ",
+        "       9778         3116      ",
+        "                    5         ",
+        "                    5         ",
+        "                    5         ",
+        "       3112       316         ",
+        "                              ",
+        "312                           ",
         "                              ",
         "                              ",
-        "                              ",
-        "ppp                           ",
-        "                              ",
-        "       pppp                   ",
-        "                              ",
-        "                              ",
-        "                              ",
-        "                ppp           ",
-        "        ppppppppp p           ",
-        "        p         p           ",
-        "        ppppppppppp        pppp",
-        "                              ",
-        "                              ",
-        "       ppppp  pppppppp        ",
+        "       3112                   ",
         "                              ",
         "                              ",
         "                              ",
@@ -126,29 +106,49 @@ def main():
         "                              ",
         "                              ",
         "                              ",
-        "PPPPP                         ",
-        "       PPPPP                  ",
+        "312                           ",
         "                              ",
-        "                              ",
-        "              PPPP        PPPP",
-        "                              ",
-        "                              ",
-        "                    PPPP      ",
+        "       3112                   ",
         "                              ",
         "                              ",
         "                              ",
-        "             PPPPPP           ",
+        "                312           ",
+        "        31111111664           ",
+        "        56666666664           ",
+        "        97777777778       3112",
+        "                              ",
+        "                              ",
+        "       31112  31111112        ",
         "                              ",
         "                              ",
         "                              ",
         "                              ",
-        "PPPPPPPPPP           PPPPPPPPP",
-        "         P           P        ",
-        "         P           P        ",
-        "         P           P        ",
-        "         P           P        ",
-        "         P           P        ",
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
+        "                              ",
+        "                              ",
+        "                              ",
+        "31112                         ",
+        "       31112                  ",
+        "                              ",
+        "                              ",
+        "              3112        3112",
+        "                              ",
+        "                              ",
+        "                    3112      ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "             311112           ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "                              ",
+        "1111111112           311111111",
+        "6666666664           5666666666",
+        "6666666664           5666666666",
+        "6666666664           5666666666",
+        "6666666664           5666666666",
+        "6666666664         E 5666666666",
+        "6666666666111111111116666666666",]
     
     x = y = 0
 
@@ -175,8 +175,8 @@ def main():
     # build the level
     for row in level:
         for col in row:
-            if col.lower() == "p":
-                Platform((x, y), (TILE_SIZE, TILE_SIZE), platforms, entities)
+            if col != " ":
+                Platform(col, (x, y), (TILE_SIZE, TILE_SIZE), platforms, entities)
             if col.lower() == "e":
                 ExitBlock((x, y), (TILE_SIZE, TILE_SIZE), platforms, entities)
             x += TILE_SIZE
@@ -195,7 +195,7 @@ def main():
 
         entities.update()
         
-        screen.blit(background, (0, -625 - player.rect.bottom/10))
+        screen.blit(background, (0, -600 - player.rect.bottom/10))
 
         entities.draw(screen)
         
@@ -209,17 +209,43 @@ def main():
         timer.tick(60)
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, color, pos, hitbox, *groups):
+    def __init__(self, value, pos, hitbox, *groups):
         super().__init__(*groups)
         self.image = Surface((hitbox))
-        self.image.fill(color)
+        if value == "1":
+            image = pygame.transform.scale(pygame.image.load("grass1b.png"), (37, 37))
+            self.image = image
+        elif value == "2":
+            image = pygame.transform.scale(pygame.image.load("grass1c.png"), (37, 37))
+            self.image = image
+        elif value == "3":
+            image = pygame.transform.scale(pygame.image.load("grass1a.png"), (37, 37))
+            self.image = image
+        elif value == "4":
+            image = pygame.transform.scale(pygame.image.load("grass2c.png"), (37, 37))
+            self.image = image
+        elif value == "5":
+            image = pygame.transform.scale(pygame.image.load("grass2a.png"), (37, 37))
+            self.image = image
+        elif value == "6":
+            image = pygame.transform.scale(pygame.image.load("grass2b.png"), (37, 37))
+            self.image = image
+        elif value == "7":
+            image = pygame.transform.scale(pygame.image.load("grass3b.png"), (37, 37))
+            self.image = image
+        elif value == "8":
+            image = pygame.transform.scale(pygame.image.load("grass3c.png"), (37, 37))
+            self.image = image
+        elif value == "9":
+            image = pygame.transform.scale(pygame.image.load("grass3a.png"), (37, 37))
+            self.image = image
         self.rect = self.image.get_rect(topleft=pos)
 
 class Player(Entity):
     global level_width, level_height
     def __init__(self, platforms, pos, hitbox, *groups):
         super().__init__(Color("#0000FF"), pos, hitbox)
-        self.image = pygame.image.load("newPlayer.png").convert()
+        self.image = pygame.image.load("newPlayer.png")
         self.vel = pygame.Vector2((0, 0))
         self.hitbox = hitbox
         self.onGround = False
@@ -231,9 +257,9 @@ class Player(Entity):
         self.fails = 0
           
     def update(self):
-        for platform in self.platforms:
+        for platform in self.platforms: 
             if isinstance(platform, ExitBlock):
-                image = pygame.image.load("door.png").convert()
+                image = pygame.image.load("door.png")
                 image = pygame.transform.scale(image, (66, 50))
                 platform.image = image
         pressed = pygame.key.get_pressed()
@@ -296,10 +322,11 @@ class Player(Entity):
 
     def collide(self, xvel, yvel, platforms):
         for platform in platforms:
-            if pygame.sprite.collide_rect(self, platform):
-                if isinstance(platform, ExitBlock):
+            if isinstance(platform, ExitBlock):
+                if (platform.rect.bottomright == self.rect.bottomleft) or (platform.rect.bottomleft == self.rect.bottomright) or (platform.rect.top == self.rect.bottom):
                     endMenu(self.jumps, self.fails, round((level_height - 32 - self.rect.bottom)/26))
                     pygame.event.post(pygame.event.Event(QUIT))
+            if pygame.sprite.collide_rect(self, platform):
                 if xvel > 0:
                     self.rect.right = platform.rect.left
                     self.vel.x = 0
@@ -319,8 +346,8 @@ class Player(Entity):
                     self.vel.y = 0
 
 class Platform(Entity):
-    def __init__(self, pos, *groups):
-        super().__init__(Color("#DDDDDD"), pos, *groups)
+    def __init__(self, value, pos, *groups):
+        super().__init__(value, pos, *groups)
 
 class ExitBlock(Entity):
     def __init__(self, pos, *groups):
@@ -370,7 +397,7 @@ def endMenu(jumps, fails, height):
             endMessage2 = FONT.render("The next one is more challenging. Good luck.", True, (255, 255, 255))
             endMessage2Rect = endMessage2.get_rect(center = (SCREEN_SIZE.width/2, SCREEN_SIZE.height/2+30))
             screen.blit(endMessage2, endMessage2Rect)
-            statistics1 = FONT.render(f"In {round(elapsedTime, 2)} seconds you jumped {jumps} times,", True, (255, 255, 255))
+            statistics1 = FONT.render(f"In {round(elapsedTime)} seconds you jumped {jumps} times,", True, (255, 255, 255))
             statistics1Rect = statistics1.get_rect(center = (SCREEN_SIZE.width/2, 30))
             screen.blit(statistics1, statistics1Rect)
             statistics2 = FONT.render(f"fell {fails} times, and climbed {height} meters.", True, (255, 255, 255))
